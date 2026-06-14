@@ -6,37 +6,86 @@ metadata:
 
 spec:
 
+  params:
+
+  - name: git-url
+    type: string
+    default: "https://github.com/neyagopi75/k8s-payment-pipeline"
+
+  - name: git-revision
+    type: string
+    default: "main"
+
+  - name: image-repository
+    type: string
+    default: "artifactory.company.com/payment-system"
+
+  - name: image-tag
+    type: string
+    default: "latest"
+
   workspaces:
-  - name: shared-workspace
+
+  - name: source-workspace
 
   tasks:
 
-  - name: clone-repository
+  - name: clone-source
+
     taskRef:
       name: git-clone
 
+    params:
+
+    - name: url
+      value: $(params.git-url)
+
+    - name: revision
+      value: $(params.git-revision)
+
     workspaces:
+
     - name: output
-      workspace: shared-workspace
+      workspace: source-workspace
 
   - name: build-image
+
     runAfter:
-    - clone-repository
+    - clone-source
 
     taskRef:
-      name: build-image
+      name: buildah
+
+    params:
+
+    - name: IMAGE
+      value: $(params.image-repository):$(params.image-tag)
+
+    - name: DOCKERFILE
+      value: ./Dockerfile
+
+    - name: CONTEXT
+      value: .
 
     workspaces:
+
     - name: source
-      workspace: shared-workspace
+      workspace: source-workspace
 
   - name: push-image
+
     runAfter:
     - build-image
 
     taskRef:
       name: push-artifactory
 
+    params:
+
+    - name: IMAGE
+      value: $(params.image-repository):$(params.image-tag)
+
     workspaces:
+
     - name: source
-      workspace: shared-workspace
+      workspace: source-workspace
