@@ -178,8 +178,6 @@ The application is intentionally minimal to keep the focus on infrastructure and
 
 ---
 
-## Author
 
-Gopinath Neya
 
 DevOps Engineer | Kubernetes | OpenShift | Tekton | Helm | Harness | Artifactory
