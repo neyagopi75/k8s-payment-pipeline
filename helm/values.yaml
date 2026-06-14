@@ -1,0 +1,44 @@
+replicaCount: 2
+
+image:
+  repository: artifactory.company.com/payment-system
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+route:
+  enabled: true
+  host: payment.apps.cluster.local
+
+deploymentStrategy:
+  type: RollingUpdate
+
+rollingUpdate:
+  maxUnavailable: 25%
+  maxSurge: 25%
+
+env:
+  APP_ENV: dev
+  JAVA_OPTS: "-Xms256m -Xmx512m"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+readinessProbe:
+  path: /actuator/health/readiness
+  initialDelaySeconds: 20
+  periodSeconds: 10
+
+livenessProbe:
+  path: /actuator/health/liveness
+  initialDelaySeconds: 30
+  periodSeconds: 20

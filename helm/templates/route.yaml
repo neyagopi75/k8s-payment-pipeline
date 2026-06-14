@@ -1,0 +1,19 @@
+{{- if .Values.route.enabled }}
+
+apiVersion: route.openshift.io/v1
+kind: Route
+
+metadata:
+  name: payment-system
+
+spec:
+  host: {{ .Values.route.host }}
+
+  to:
+    kind: Service
+    name: payment-system
+
+  port:
+    targetPort: {{ .Values.service.port }}
+
+{{- end }}

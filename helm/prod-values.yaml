@@ -1,0 +1,4 @@
+replicaCount: 3
+
+route:
+  host: payment.apps.openshift.local

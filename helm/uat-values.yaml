@@ -1,0 +1,4 @@
+replicaCount: 2
+
+route:
+  host: payment-uat.apps.openshift.local
